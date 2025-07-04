@@ -27,17 +27,32 @@ class UserController extends Controller
     }
 
     // Aggiorna i dati dell’utente autenticato
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $user = auth()->user();
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Utente non trovato'], 404);
+        }
 
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . $user->id,
-            // altri campi se servono
+        // Se vuoi permettere solo all'admin di aggiornare altri utenti:
+        if (!auth()->user()->hasRole('admin')) {
+            return response()->json(['message' => 'Non autorizzato'], 403);
+        }
+
+        $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|nullable|string|min:6|confirmed'
         ]);
 
-        $user->update($validated);
+        if ($request->has('name'))
+            $user->name = $request->name;
+        if ($request->has('email'))
+            $user->email = $request->email;
+        if ($request->has('password'))
+            $user->password = bcrypt($request->password);
+
+        $user->save();
 
         return response()->json([
             'message' => 'Profilo aggiornato',
