@@ -51,14 +51,18 @@ class MovieController extends Controller
     // Mostra un film specifico
     public function show($id)
     {
-        $movie = Movie::find($id);
-
-        if (!$movie) {
-            return response()->json(['error' => 'Film non trovato'], 404);
+        $user = auth()->user();
+        if ($user && $user->hasRole('admin')) {
+            $movie = Movie::withTrashed()->find($id);
+        } else {
+            $movie = Movie::find($id);
         }
-
+        if (!$movie) {
+            return response()->json(['message' => 'Film non trovato'], 404);
+        }
         return response()->json($movie);
     }
+
 
     // Crea un nuovo film (solo admin)
     public function store(Request $request)
