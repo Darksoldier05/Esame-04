@@ -1,0 +1,63 @@
+API ENDPOINTS - PIATTAFORMA STREAMING
+
+BASE URL: http://localhost:8000/api
+
+------------------------
+ROTTE PUBBLICHE
+------------------------
+POST    /register/{utente}             --> Registrazione utente (utente = mail HASHATA)
+GET     /accedi/{utente}/{hash?}       --> Login utente (hash opzionale, vedi documentazione)
+GET     /searchMail/{utente}           --> Verifica se l'utente (mail hashata) esiste
+
+------------------------
+ROTTE AUTENTICATE (middleware "autenticazione")
+------------------------
+GET     /me                            --> Info utente autenticato
+POST    /logout                        --> Logout
+
+# Visualizzazione contenuti (user & admin)
+GET     /movies                        --> Lista film
+GET     /movies/{id}                   --> Dettaglio film
+
+GET     /series                        --> Lista serie
+GET     /series/{id}                   --> Dettaglio serie
+
+GET     /episodes                      --> Lista episodi
+GET     /episodes/{id}                 --> Dettaglio episodio
+
+GET     /categories                    --> Lista categorie
+GET     /categories/{id}               --> Dettaglio categoria
+
+# Profilo utente (user & admin)
+PUT     /me/update                     --> Modifica dati propri
+POST    /me/add-credits                --> Aggiungi crediti al proprio profilo
+
+------------------------
+ROTTE RISERVATE SOLO AD ADMIN (middleware "autenticazione" + ruolo admin)
+------------------------
+# Gestione film
+POST    /movies                        --> Crea nuovo film
+PUT     /movies/{id}                   --> Modifica film
+DELETE  /movies/{id}                   --> Elimina film
+
+# Gestione serie
+POST    /series                        --> Crea nuova serie
+PUT     /series/{id}                   --> Modifica serie
+DELETE  /series/{id}                   --> Elimina serie
+
+# Gestione episodi
+POST    /episodes                      --> Crea nuovo episodio
+PUT     /episodes/{id}                 --> Modifica episodio
+DELETE  /episodes/{id}                 --> Elimina episodio
+
+# Gestione categorie
+POST    /categories                    --> Crea nuova categoria
+PUT     /categories/{id}               --> Modifica categoria
+DELETE  /categories/{id}               --> Elimina categoria
+
+# Gestione utenti (solo admin)
+GET     /users                         --> Lista utenti
+GET     /users/{id}                    --> Dettaglio utente
+PUT     /users/{id}                    --> Modifica utente
+DELETE  /users/{id}                    --> Elimina utente
+
